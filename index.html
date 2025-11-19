@@ -276,6 +276,9 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
+            text-decoration: none;
+            display: block;
+            color: inherit;
         }
 
         .resource-card:hover {
@@ -581,13 +584,23 @@
         const closeModal = document.getElementById('closeModal');
         const resourceBtns = document.querySelectorAll('.resource-btn');
 
-        // Resource data - UPDATED STUDY GUIDE SECTION
+        // Resource data - UPDATED WITH PDF LINKS
         const resources = {
             'study-guide': {
                 title: 'Study Guide Resources',
                 items: [
-                    { icon: '📖', name: 'Study Guide', description: 'Complete CS:GO study materials and guides' },
-                    { icon: '📝', name: 'Test Bank', description: 'Practice questions and test materials' }
+                    { 
+                        icon: '📖', 
+                        name: 'Study Guide', 
+                        description: 'Complete CS:GO study materials and guides',
+                        url: 'study-guide/study-guide.pdf' // PDF file path
+                    },
+                    { 
+                        icon: '📝', 
+                        name: 'Test Bank', 
+                        description: 'Practice questions and test materials',
+                        url: 'study-guide/test-bank.pdf' // PDF file path
+                    }
                 ]
             },
             'big-data': {
@@ -636,14 +649,29 @@
                     modalContent.innerHTML = '';
                     
                     resourceData.items.forEach(item => {
-                        const card = document.createElement('div');
-                        card.className = 'resource-card';
-                        card.innerHTML = `
-                            <div class="resource-icon">${item.icon}</div>
-                            <div class="resource-name">${item.name}</div>
-                            <div class="resource-description">${item.description}</div>
-                        `;
-                        modalContent.appendChild(card);
+                        // Create clickable cards for Study Guide items with PDF links
+                        if (resourceType === 'study-guide' && item.url) {
+                            const card = document.createElement('a');
+                            card.className = 'resource-card';
+                            card.href = item.url;
+                            card.target = '_blank';
+                            card.innerHTML = `
+                                <div class="resource-icon">${item.icon}</div>
+                                <div class="resource-name">${item.name}</div>
+                                <div class="resource-description">${item.description}</div>
+                            `;
+                            modalContent.appendChild(card);
+                        } else {
+                            // Create regular cards for other resources
+                            const card = document.createElement('div');
+                            card.className = 'resource-card';
+                            card.innerHTML = `
+                                <div class="resource-icon">${item.icon}</div>
+                                <div class="resource-name">${item.name}</div>
+                                <div class="resource-description">${item.description}</div>
+                            `;
+                            modalContent.appendChild(card);
+                        }
                     });
                     
                     resourceModal.classList.add('show');
