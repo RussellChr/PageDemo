@@ -18,7 +18,7 @@
             background: #0a0a1f;
         }
 
-        /* Background Pattern */
+        /* Animated GIF Background */
         .background-container {
             position: fixed;
             top: 0;
@@ -26,10 +26,13 @@
             width: 100%;
             height: 100%;
             z-index: -2;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(187, 153, 213, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(26, 35, 126, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 40% 80%, rgba(123, 31, 162, 0.1) 0%, transparent 50%);
+        }
+
+        .background-gif {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.4;
         }
 
         /* Overlay for better readability */
@@ -166,6 +169,37 @@
             50% { opacity: 0.8; }
         }
 
+        /* Easter Egg Video */
+        #easterEggVideo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 80vw;
+            height: 80vh;
+            max-width: 1200px;
+            max-height: 800px;
+            background: #000;
+            border: 3px solid #bb99d5;
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(187, 153, 213, 0.5);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        #easterEggVideo.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        #easterEggVideo video {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
         /* Resource Modal */
         .resource-modal {
             position: fixed;
@@ -242,9 +276,6 @@
             padding: 1.5rem;
             transition: all 0.3s ease;
             cursor: pointer;
-            text-decoration: none;
-            display: block;
-            color: inherit;
         }
 
         .resource-card:hover {
@@ -367,26 +398,6 @@
             margin-top: 2rem;
         }
 
-        /* GitHub Integration Notice */
-        .github-notice {
-            background: rgba(187, 153, 213, 0.1);
-            border: 1px solid rgba(187, 153, 213, 0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            text-align: center;
-        }
-
-        .github-notice a {
-            color: #bb99d5;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .github-notice a:hover {
-            text-decoration: underline;
-        }
-
         /* Responsive Design */
         @media (max-width: 968px) {
             .content-showcase {
@@ -422,6 +433,11 @@
                 font-size: 1rem;
             }
             
+            #easterEggVideo {
+                width: 95vw;
+                height: 60vh;
+            }
+            
             .modal-content {
                 grid-template-columns: 1fr;
             }
@@ -429,9 +445,19 @@
     </style>
 </head>
 <body>
-    <!-- Background Pattern -->
-    <div class="background-container"></div>
+    <!-- Animated Background -->
+    <div class="background-container">
+        <img src="images/background.gif" alt="CS:GO Animated Background" class="background-gif">
+    </div>
     <div class="overlay"></div>
+
+    <!-- Easter Egg Video (Hidden by default) -->
+    <div id="easterEggVideo">
+        <video id="secretVideo" controls>
+            <source src="videos/easter-egg.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
     <!-- Resource Modal -->
     <div class="resource-modal" id="resourceModal">
@@ -441,9 +467,6 @@
         </div>
         <div class="modal-content" id="modalContent">
             <!-- Resources will be dynamically added here -->
-        </div>
-        <div class="github-notice">
-            <p>Files will be available on GitHub soon. Replace placeholder URLs with your GitHub repository links.</p>
         </div>
     </div>
 
@@ -462,10 +485,10 @@
     <!-- Main Content -->
     <div class="main-container">
         <div class="content-showcase">
-            <!-- CS:GO Image -->
+            <!-- CS:GO Image with Easter Egg -->
             <div class="image-container">
                 <div class="image-glow"></div>
-                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" alt="CS:GO" class="main-image">
+                <img src="images/csgo-image.png" alt="CS:GO" class="main-image" id="csgoImage">
             </div>
 
             <!-- Content Info -->
@@ -504,10 +527,6 @@
                     <button class="resource-btn" data-resource="connectionist-ai">🤖 Connectionist AI</button>
                     <button class="resource-btn" data-resource="games">🎮 Games</button>
                 </div>
-                
-                <div class="github-notice">
-                    <p>Uploading files to GitHub soon. Links will be updated automatically.</p>
-                </div>
             </div>
         </div>
     </div>
@@ -518,6 +537,43 @@
     </footer>
 
     <script>
+        // Easter Egg Functionality
+        const csgoImage = document.getElementById('csgoImage');
+        const easterEggVideo = document.getElementById('easterEggVideo');
+        const secretVideo = document.getElementById('secretVideo');
+
+        csgoImage.addEventListener('click', function() {
+            // Show the video
+            easterEggVideo.classList.add('show');
+            
+            // Play the video
+            secretVideo.play();
+            
+            // Auto-close when video ends
+            secretVideo.onended = function() {
+                easterEggVideo.classList.remove('show');
+                secretVideo.currentTime = 0; // Reset video
+            };
+            
+            // Also allow clicking outside to close
+            easterEggVideo.addEventListener('click', function(e) {
+                if (e.target === easterEggVideo) {
+                    easterEggVideo.classList.remove('show');
+                    secretVideo.pause();
+                    secretVideo.currentTime = 0;
+                }
+            });
+        });
+
+        // Close with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                easterEggVideo.classList.remove('show');
+                secretVideo.pause();
+                secretVideo.currentTime = 0;
+            }
+        });
+
         // Resource Modal Functionality
         const resourceModal = document.getElementById('resourceModal');
         const modalTitle = document.getElementById('modalTitle');
@@ -525,92 +581,46 @@
         const closeModal = document.getElementById('closeModal');
         const resourceBtns = document.querySelectorAll('.resource-btn');
 
-        // Resource data - Update these URLs with your GitHub links
+        // Resource data - UPDATED STUDY GUIDE SECTION
         const resources = {
             'study-guide': {
                 title: 'Study Guide Resources',
                 items: [
-                    { 
-                        icon: '📖', 
-                        name: 'Study Guide', 
-                        description: 'Complete CS:GO study materials and guides',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/study-guide.pdf' // Update this
-                    },
-                    { 
-                        icon: '📝', 
-                        name: 'Test Bank', 
-                        description: 'Practice questions and test materials',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/test-bank.pdf' // Update this
-                    }
+                    { icon: '📖', name: 'Study Guide', description: 'Complete CS:GO study materials and guides' },
+                    { icon: '📝', name: 'Test Bank', description: 'Practice questions and test materials' }
                 ]
             },
             'big-data': {
                 title: 'Big Data Resources',
                 items: [
-                    { 
-                        icon: '📈', 
-                        name: 'Analytics Tools', 
-                        description: 'Tools for analyzing CS:GO match data',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/big-data/analytics-tools.pdf' // Update this
-                    },
-                    { 
-                        icon: '🔍', 
-                        name: 'Data Mining', 
-                        description: 'Techniques for extracting insights from game data',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/big-data/data-mining.pdf' // Update this
-                    },
-                    { 
-                        icon: '📊', 
-                        name: 'Visualization', 
-                        description: 'Visual representations of player statistics',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/big-data/visualization.pdf' // Update this
-                    }
+                    { icon: '📈', name: 'Analytics Tools', description: 'Tools for analyzing CS:GO match data' },
+                    { icon: '🔍', name: 'Data Mining', description: 'Techniques for extracting insights from game data' },
+                    { icon: '📊', name: 'Visualization', description: 'Visual representations of player and team statistics' },
+                    { icon: '🤖', name: 'AI Integration', description: 'Using AI to process and analyze gaming data' },
+                    { icon: '⚙️', name: 'Processing Tools', description: 'Tools for handling large datasets' },
+                    { icon: '📋', name: 'Case Studies', description: 'Real-world examples of data analysis in gaming' }
                 ]
             },
             'connectionist-ai': {
                 title: 'Connectionist AI Resources',
                 items: [
-                    { 
-                        icon: '🧠', 
-                        name: 'Neural Networks', 
-                        description: 'Introduction to neural networks in gaming',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/ai/neural-networks.pdf' // Update this
-                    },
-                    { 
-                        icon: '🎮', 
-                        name: 'AI Players', 
-                        description: 'AI systems that can play CS:GO',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/ai/ai-players.pdf' // Update this
-                    },
-                    { 
-                        icon: '📚', 
-                        name: 'Learning Algorithms', 
-                        description: 'Algorithms for training game AI',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/ai/learning-algorithms.pdf' // Update this
-                    }
+                    { icon: '🧠', name: 'Neural Networks', description: 'Introduction to neural networks in gaming' },
+                    { icon: '🎮', name: 'AI Players', description: 'AI systems that can play CS:GO' },
+                    { icon: '📚', name: 'Learning Algorithms', description: 'Algorithms for training game AI' },
+                    { icon: '🔬', name: 'Research Papers', description: 'Academic papers on AI in gaming' },
+                    { icon: '🛠️', name: 'Development Tools', description: 'Tools for creating and training game AI' },
+                    { icon: '📈', name: 'Performance Metrics', description: 'Measuring and evaluating AI performance' }
                 ]
             },
             'games': {
                 title: 'Games Resources',
                 items: [
-                    { 
-                        icon: '🎮', 
-                        name: 'Game Mechanics', 
-                        description: 'Deep dive into CS:GO game mechanics',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/games/mechanics.pdf' // Update this
-                    },
-                    { 
-                        icon: '🏆', 
-                        name: 'Competitive Play', 
-                        description: 'Guide to competitive CS:GO',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/games/competitive.pdf' // Update this
-                    },
-                    { 
-                        icon: '🔄', 
-                        name: 'Updates & Patches', 
-                        description: 'Latest game updates and patch notes',
-                        url: 'https://github.com/yourusername/csgo-resources/raw/main/games/updates.pdf' // Update this
-                    }
+                    { icon: '🎮', name: 'Game Mechanics', description: 'Deep dive into CS:GO game mechanics' },
+                    { icon: '🏆', name: 'Competitive Play', description: 'Guide to competitive CS:GO' },
+                    { icon: '🔄', name: 'Updates & Patches', description: 'Latest game updates and patch notes' },
+                    { icon: '👥', name: 'Team Play', description: 'Strategies for effective team coordination' },
+                    { icon: '🎯', name: 'Weapon Guides', description: 'Complete guides for all CS:GO weapons' },
+                    { icon: '📺', name: 'Esports', description: 'Professional CS:GO scene and tournaments' }
                 ]
             }
         };
@@ -626,10 +636,8 @@
                     modalContent.innerHTML = '';
                     
                     resourceData.items.forEach(item => {
-                        const card = document.createElement('a');
+                        const card = document.createElement('div');
                         card.className = 'resource-card';
-                        card.href = item.url;
-                        card.target = '_blank';
                         card.innerHTML = `
                             <div class="resource-icon">${item.icon}</div>
                             <div class="resource-name">${item.name}</div>
