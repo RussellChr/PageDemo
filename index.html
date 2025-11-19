@@ -200,6 +200,108 @@
             object-fit: cover;
         }
 
+        /* Resource Modal */
+        .resource-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            background: rgba(26, 35, 126, 0.95);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(187, 153, 213, 0.5);
+            border-radius: 15px;
+            box-shadow: 0 0 50px rgba(187, 153, 213, 0.5);
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.5s ease;
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .resource-modal.show {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(187, 153, 213, 0.3);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #bb99d5, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: #bb99d5;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            background: rgba(187, 153, 213, 0.2);
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: rgba(187, 153, 213, 0.1);
+            border: 1px solid rgba(187, 153, 213, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(187, 153, 213, 0.2);
+            background: rgba(187, 153, 213, 0.15);
+        }
+
+        .resource-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #bb99d5;
+        }
+
+        .resource-description {
+            font-size: 0.9rem;
+            color: #e0e0ff;
+            line-height: 1.4;
+        }
+
         /* Content Info */
         .content-info {
             background: rgba(26, 35, 126, 0.2);
@@ -335,6 +437,10 @@
                 width: 95vw;
                 height: 60vh;
             }
+            
+            .modal-content {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -351,6 +457,17 @@
             <source src="videos/easter-egg.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
+    </div>
+
+    <!-- Resource Modal -->
+    <div class="resource-modal" id="resourceModal">
+        <div class="modal-header">
+            <h2 class="modal-title" id="modalTitle">Resources</h2>
+            <button class="close-modal" id="closeModal">&times;</button>
+        </div>
+        <div class="modal-content" id="modalContent">
+            <!-- Resources will be dynamically added here -->
+        </div>
     </div>
 
     <!-- Navigation -->
@@ -405,10 +522,10 @@
 
                 <!-- Resource Links -->
                 <div class="resource-links">
-                    <a href="#ppt" class="resource-btn">📊 PPT Presentations</a>
-                    <a href="#video" class="resource-btn">🎥 Video Guides</a>
-                    <a href="#test-bank" class="resource-btn">📝 Test Bank</a>
-                    <a href="https://slexsi.github.io/AiRythmnGame/" class="resource-btn">📚 Study Guide</a>
+                    <button class="resource-btn" data-resource="study-guide">📚 Study Guide</button>
+                    <button class="resource-btn" data-resource="big-data">📊 Big Data</button>
+                    <button class="resource-btn" data-resource="connectionist-ai">🤖 Connectionist AI</button>
+                    <button class="resource-btn" data-resource="games">🎮 Games</button>
                 </div>
             </div>
         </div>
@@ -454,6 +571,106 @@
                 easterEggVideo.classList.remove('show');
                 secretVideo.pause();
                 secretVideo.currentTime = 0;
+            }
+        });
+
+        // Resource Modal Functionality
+        const resourceModal = document.getElementById('resourceModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        const closeModal = document.getElementById('closeModal');
+        const resourceBtns = document.querySelectorAll('.resource-btn');
+
+        // Resource data
+        const resources = {
+            'study-guide': {
+                title: 'Study Guide Resources',
+                items: [
+                    { icon: '📖', name: 'CS:GO Basics', description: 'Complete guide to CS:GO fundamentals' },
+                    { icon: '🎯', name: 'Aiming Techniques', description: 'Master your aim with these proven techniques' },
+                    { icon: '🗺️', name: 'Map Strategies', description: 'Detailed strategies for all competitive maps' },
+                    { icon: '💰', name: 'Economy Guide', description: 'Learn when to buy and save for maximum efficiency' },
+                    { icon: '🧠', name: 'Game Sense', description: 'Develop your game sense and decision making' },
+                    { icon: '🔄', name: 'Practice Routines', description: 'Effective practice routines for improvement' }
+                ]
+            },
+            'big-data': {
+                title: 'Big Data Resources',
+                items: [
+                    { icon: '📈', name: 'Analytics Tools', description: 'Tools for analyzing CS:GO match data' },
+                    { icon: '🔍', name: 'Data Mining', description: 'Techniques for extracting insights from game data' },
+                    { icon: '📊', name: 'Visualization', description: 'Visual representations of player and team statistics' },
+                    { icon: '🤖', name: 'AI Integration', description: 'Using AI to process and analyze gaming data' },
+                    { icon: '⚙️', name: 'Processing Tools', description: 'Tools for handling large datasets' },
+                    { icon: '📋', name: 'Case Studies', description: 'Real-world examples of data analysis in gaming' }
+                ]
+            },
+            'connectionist-ai': {
+                title: 'Connectionist AI Resources',
+                items: [
+                    { icon: '🧠', name: 'Neural Networks', description: 'Introduction to neural networks in gaming' },
+                    { icon: '🎮', name: 'AI Players', description: 'AI systems that can play CS:GO' },
+                    { icon: '📚', name: 'Learning Algorithms', description: 'Algorithms for training game AI' },
+                    { icon: '🔬', name: 'Research Papers', description: 'Academic papers on AI in gaming' },
+                    { icon: '🛠️', name: 'Development Tools', description: 'Tools for creating and training game AI' },
+                    { icon: '📈', name: 'Performance Metrics', description: 'Measuring and evaluating AI performance' }
+                ]
+            },
+            'games': {
+                title: 'Games Resources',
+                items: [
+                    { icon: '🎮', name: 'Game Mechanics', description: 'Deep dive into CS:GO game mechanics' },
+                    { icon: '🏆', name: 'Competitive Play', description: 'Guide to competitive CS:GO' },
+                    { icon: '🔄', name: 'Updates & Patches', description: 'Latest game updates and patch notes' },
+                    { icon: '👥', name: 'Team Play', description: 'Strategies for effective team coordination' },
+                    { icon: '🎯', name: 'Weapon Guides', description: 'Complete guides for all CS:GO weapons' },
+                    { icon: '📺', name: 'Esports', description: 'Professional CS:GO scene and tournaments' }
+                ]
+            }
+        };
+
+        // Open modal when resource button is clicked
+        resourceBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const resourceType = this.getAttribute('data-resource');
+                const resourceData = resources[resourceType];
+                
+                if (resourceData) {
+                    modalTitle.textContent = resourceData.title;
+                    modalContent.innerHTML = '';
+                    
+                    resourceData.items.forEach(item => {
+                        const card = document.createElement('div');
+                        card.className = 'resource-card';
+                        card.innerHTML = `
+                            <div class="resource-icon">${item.icon}</div>
+                            <div class="resource-name">${item.name}</div>
+                            <div class="resource-description">${item.description}</div>
+                        `;
+                        modalContent.appendChild(card);
+                    });
+                    
+                    resourceModal.classList.add('show');
+                }
+            });
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', function() {
+            resourceModal.classList.remove('show');
+        });
+
+        // Close modal when clicking outside
+        resourceModal.addEventListener('click', function(e) {
+            if (e.target === resourceModal) {
+                resourceModal.classList.remove('show');
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && resourceModal.classList.contains('show')) {
+                resourceModal.classList.remove('show');
             }
         });
     </script>
