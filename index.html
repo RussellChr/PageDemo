@@ -584,7 +584,7 @@
         const closeModal = document.getElementById('closeModal');
         const resourceBtns = document.querySelectorAll('.resource-btn');
 
-        // Resource data - UPDATED WITH PDF LINKS
+        // Resource data - UPDATED WITH CHAPTERS 1-6 FOR BIG DATA AND CONNECTIONIST AI
         const resources = {
             'study-guide': {
                 title: 'Study Guide Resources',
@@ -606,23 +606,83 @@
             'big-data': {
                 title: 'Big Data Resources',
                 items: [
-                    { icon: '📈', name: 'Analytics Tools', description: 'Tools for analyzing CS:GO match data' },
-                    { icon: '🔍', name: 'Data Mining', description: 'Techniques for extracting insights from game data' },
-                    { icon: '📊', name: 'Visualization', description: 'Visual representations of player and team statistics' },
-                    { icon: '🤖', name: 'AI Integration', description: 'Using AI to process and analyze gaming data' },
-                    { icon: '⚙️', name: 'Processing Tools', description: 'Tools for handling large datasets' },
-                    { icon: '📋', name: 'Case Studies', description: 'Real-world examples of data analysis in gaming' }
+                    { 
+                        icon: '📘', 
+                        name: 'Chapter 1', 
+                        description: 'Introduction to Big Data',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '📘', 
+                        name: 'Chapter 2', 
+                        description: 'Data Storage and Management',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '📘', 
+                        name: 'Chapter 3', 
+                        description: 'Data Processing and Analytics',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '📘', 
+                        name: 'Chapter 4', 
+                        description: 'Data Visualization Techniques',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '📘', 
+                        name: 'Chapter 5', 
+                        description: 'Big Data Applications',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '📘', 
+                        name: 'Chapter 6', 
+                        description: 'Future Trends in Big Data',
+                        url: '#' // Replace with actual URL
+                    }
                 ]
             },
             'connectionist-ai': {
                 title: 'Connectionist AI Resources',
                 items: [
-                    { icon: '🧠', name: 'Neural Networks', description: 'Introduction to neural networks in gaming' },
-                    { icon: '🎮', name: 'AI Players', description: 'AI systems that can play CS:GO' },
-                    { icon: '📚', name: 'Learning Algorithms', description: 'Algorithms for training game AI' },
-                    { icon: '🔬', name: 'Research Papers', description: 'Academic papers on AI in gaming' },
-                    { icon: '🛠️', name: 'Development Tools', description: 'Tools for creating and training game AI' },
-                    { icon: '📈', name: 'Performance Metrics', description: 'Measuring and evaluating AI performance' }
+                    { 
+                        icon: '🧠', 
+                        name: 'Chapter 1', 
+                        description: 'Introduction to Neural Networks',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '🧠', 
+                        name: 'Chapter 2', 
+                        description: 'Perceptrons and Activation Functions',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '🧠', 
+                        name: 'Chapter 3', 
+                        description: 'Backpropagation and Learning',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '🧠', 
+                        name: 'Chapter 4', 
+                        description: 'Deep Learning Architectures',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '🧠', 
+                        name: 'Chapter 5', 
+                        description: 'Convolutional Neural Networks',
+                        url: '#' // Replace with actual URL
+                    },
+                    { 
+                        icon: '🧠', 
+                        name: 'Chapter 6', 
+                        description: 'Recurrent Neural Networks',
+                        url: '#' // Replace with actual URL
+                    }
                 ]
             },
             'games': {
@@ -649,8 +709,8 @@
                     modalContent.innerHTML = '';
                     
                     resourceData.items.forEach(item => {
-                        // Create clickable cards for Study Guide items with PDF links
-                        if (resourceType === 'study-guide' && item.url) {
+                        // Create clickable cards for items with URLs
+                        if (item.url) {
                             const card = document.createElement('a');
                             card.className = 'resource-card';
                             card.href = item.url;
@@ -662,7 +722,7 @@
                             `;
                             modalContent.appendChild(card);
                         } else {
-                            // Create regular cards for other resources
+                            // Create regular cards for items without URLs
                             const card = document.createElement('div');
                             card.className = 'resource-card';
                             card.innerHTML = `
